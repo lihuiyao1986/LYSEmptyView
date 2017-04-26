@@ -16,11 +16,16 @@ static NSInteger tag = 1000000;
 -(void)addEmptyView:(NSDictionary*)options{
     [self removeEmptyView];
     UIView * containerView = [[UIView alloc]initWithFrame:self.bounds];
+    BOOL sendToBack = options[@"sendToBack"] ? [options[@"sendToBack"] boolValue] : YES;
     UIColor *bgColor = options[@"bgColor"] ? options[@"bgColor"] : [UIColor clearColor];
     containerView.tag = tag;
     containerView.backgroundColor = bgColor;
     [self addSubview:containerView];
-    [self bringSubviewToFront:containerView];
+    if (sendToBack) {
+        [self sendSubviewToBack:containerView];
+    }else{
+        [self bringSubviewToFront:containerView];
+    }
     UIImageView *imageView = [UIImageView new];
     NSString *imageUrl = options[@"imageUrl"];
     UIImage *image = [UIImage imageNamed:imageUrl];
@@ -35,7 +40,7 @@ static NSInteger tag = 1000000;
     titleLb.textAlignment = NSTextAlignmentCenter;
     titleLb.textColor = textColor;
     titleLb.font = textFont;
-    imageView.frame = CGRectMake((CGRectGetWidth(self.frame) - image.size.width) * 0.5, (CGRectGetHeight(self.frame) - image.size.height - padding - titleHeight) * 0.5, image.size.width, image.size.height);
+    imageView.frame = CGRectMake((CGRectGetWidth(self.frame) - image.size.width) * 0.5, (CGRectGetHeight(self.frame) - image.size.height - padding - titleHeight) / 2, image.size.width, image.size.height);
     titleLb.frame = CGRectMake(0, CGRectGetMaxY(imageView.frame) + padding, CGRectGetWidth(self.frame), titleHeight);
     [containerView addSubview:imageView];
     [containerView addSubview:titleLb];
